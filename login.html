@@ -60,6 +60,31 @@
       font-weight: bold;
       text-decoration: none;
     }
+    .popup {
+      position: fixed;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      min-width: 280px;
+      max-width: 90vw;
+      background: #fff;
+      color: #333;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+      padding: 18px 28px;
+      font-size: 16px;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-left: 6px solid #ff7a00;
+      animation: popupIn 0.3s;
+    }
+    .popup.success { border-left-color: #2ecc40; }
+    .popup.error { border-left-color: #ff3b3b; }
+    .popup .fa-solid { font-size: 20px; }
+    .popup.hidden { display: none; }
+    @keyframes popupIn { from { opacity: 0; transform: translate(-50%, -20px); } to { opacity: 1; transform: translate(-50%, 0); } }
   </style>
 </head>
 <body>
@@ -75,6 +100,9 @@
     <p>Pas encore de compte ? <a href="register.html">Inscris-toi ici</a></p>
   </div>
 
+  <!-- POPUP NOTIFICATION -->
+  <div id="popup" class="popup hidden"></div>
+
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
@@ -89,12 +117,24 @@
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
       if (error) {
-        alert("❌ Erreur de connexion : " + error.message);
+        showPopup("❌ Erreur de connexion : " + error.message, "error");
       } else {
-        alert("✅ Bienvenue sur Offranel !");
-        window.location.href = "offranel.html";
+        showPopup("✅ Bienvenue sur Offranel !", "success");
+        setTimeout(() => {
+          window.location.href = "offranel.html";
+        }, 3500);
       }
     });
+
+    function showPopup(message, type = "error") {
+      const popup = document.getElementById("popup");
+      popup.className = `popup ${type}`;
+      popup.innerHTML = type === "success"
+        ? `<i class='fa-solid fa-circle-check' style='color:#2ecc40'></i> ${message}`
+        : `<i class='fa-solid fa-circle-exclamation' style='color:#ff3b3b'></i> ${message}`;
+      popup.classList.remove("hidden");
+      setTimeout(() => { popup.classList.add("hidden"); }, 3500);
+    }
   </script>
 </body>
 </html>
