@@ -71,6 +71,220 @@
       header nav { width: 100%; justify-content: space-around; }
       .card img { height: 150px; }
     }
+    .popup {
+      position: fixed;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      min-width: 280px;
+      max-width: 90vw;
+      background: #fff;
+      color: #333;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+      padding: 18px 28px;
+      font-size: 16px;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-left: 6px solid #ff7a00;
+      animation: popupIn 0.3s;
+    }
+    .popup.success { border-left-color: #2ecc40; }
+    .popup.error { border-left-color: #ff3b3b; }
+    .popup .fa-solid { font-size: 20px; }
+    .popup.hidden { display: none; }
+    @keyframes popupIn { from { opacity: 0; transform: translate(-50%, -20px); } to { opacity: 1; transform: translate(-50%, 0); } }
+    .profile-card {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.10);
+      padding: 32px 24px 24px 24px;
+      max-width: 400px;
+      margin: 30px auto 18px auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+    .profile-card .profile-avatar {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #ff7a00;
+      margin-top: -70px;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(255,122,0,0.10);
+    }
+    .profile-card h2 {
+      margin: 18px 0 6px 0;
+      color: #ff7a00;
+      font-size: 1.5em;
+      font-weight: 700;
+      text-align: center;
+    }
+    .profile-card .profile-email {
+      color: #888;
+      font-size: 1em;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    .profile-card .profile-bio {
+      color: #444;
+      font-size: 1.08em;
+      margin: 10px 0 0 0;
+      text-align: center;
+    }
+    .profile-card .profile-company {
+      margin-top: 18px;
+      font-weight: 600;
+      color: #ff7a00;
+      font-size: 1.1em;
+      text-align: center;
+    }
+    .profile-card .profile-actions {
+      margin-top: 18px;
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+    .profile-card .profile-actions button {
+      background: #ff7a00;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 18px;
+      font-size: 1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .profile-card .profile-actions button:hover {
+      background: #e66a00;
+    }
+    @media (max-width: 600px) {
+      .profile-card { padding: 18px 6vw 18px 6vw; }
+      .profile-card .profile-avatar { width: 80px; height: 80px; margin-top: -50px; }
+    }
+    .skeleton-card {
+      background: #f3f3f3;
+      border-radius: 15px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.06);
+      overflow: hidden;
+      animation: skeletonPulse 1.2s infinite ease-in-out;
+    }
+    .skeleton-img {
+      width: 100%;
+      height: 180px;
+      background: linear-gradient(90deg, #ececec 25%, #f5f5f5 50%, #ececec 75%);
+      background-size: 200% 100%;
+      animation: skeletonMove 1.2s infinite linear;
+    }
+    .skeleton-line {
+      border-radius: 6px;
+      background: linear-gradient(90deg, #ececec 25%, #f5f5f5 50%, #ececec 75%);
+      background-size: 200% 100%;
+      animation: skeletonMove 1.2s infinite linear;
+    }
+    @keyframes skeletonMove {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    @keyframes skeletonPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    @media (max-width: 600px) {
+      .skeleton-img { height: 120px; }
+    }
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.35);
+      z-index: 10000;
+    }
+    .modal-content {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff;
+      color: #333;
+      border-radius: 18px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+      padding: 32px 24px 24px 24px;
+      min-width: 320px;
+      max-width: 95vw;
+      z-index: 10001;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: popupIn 0.3s;
+    }
+    .modal-img {
+      width: 100%;
+      max-width: 340px;
+      border-radius: 12px;
+      margin-bottom: 18px;
+      object-fit: cover;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .modal-content h2 {
+      color: #ff7a00;
+      margin: 0 0 10px 0;
+      text-align: center;
+    }
+    .modal-content .price {
+      font-size: 1.3em;
+      font-weight: bold;
+      color: #ff7a00;
+      margin-bottom: 8px;
+    }
+    .modal-content .user {
+      font-size: 1em;
+      margin-bottom: 8px;
+      color: #555;
+    }
+    .modal-content .phone {
+      font-size: 1em;
+      color: #009e3c;
+      margin-left: 8px;
+    }
+    .modal-content .date {
+      font-size: 0.95em;
+      color: #888;
+      margin-bottom: 12px;
+    }
+    .modal-content .publish, .modal-content .whatsapp {
+      width: 100%;
+      margin: 8px 0 0 0;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 1.1em;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .modal-content .publish { background: #ff7a00; color: #fff; }
+    .modal-content .publish:hover { background: #e66a00; }
+    .modal-content .whatsapp { background: #25d366; color: #fff; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .modal-content .whatsapp:hover { background: #1ebe57; }
+    .close-modal {
+      position: absolute;
+      top: 10px; right: 18px;
+      background: none;
+      border: none;
+      font-size: 2em;
+      color: #ff7a00;
+      cursor: pointer;
+      z-index: 10002;
+    }
+    @media (max-width: 600px) {
+      .modal-content { min-width: 90vw; padding: 18px 4vw 18px 4vw; }
+      .modal-img { max-width: 95vw; }
+    }
   </style>
 </head>
 <body>
@@ -112,11 +326,15 @@
 </div>
 
 <div class="container hidden" id="profilePage">
-  <h2>👤 Profil</h2>
-  <div class="profile" id="userInfo"></div>
-  <h3>🏢 Offranel SARL</h3>
-  <p>Entreprise spécialisée dans la mise en relation entre acheteurs et vendeurs 🇨🇩.</p>
+  <div class="profile-card" id="userInfo"></div>
+  <div class="profile-card profile-company">
+    <h3>🏢 Offranel SARL</h3>
+    <p>Entreprise spécialisée dans la mise en relation entre acheteurs et vendeurs 🇨🇩.</p>
+  </div>
 </div>
+
+<!-- POPUP NOTIFICATION -->
+<div id="popup" class="popup hidden"></div>
 
 <script type="module">
   import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
@@ -161,9 +379,35 @@
       currentUser = user;
       buttons.logout.classList.remove("hidden");
       document.getElementById("userInfo").innerHTML = `
-        <img src="${user.user_metadata?.avatar || 'https://via.placeholder.com/90'}" alt="photo de profil">
-        <p><strong>${user.user_metadata?.full_name || user.email}</strong></p>
-        <p>${user.email}</p>`;
+        <img class="profile-avatar" src="${user.user_metadata?.avatar || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.user_metadata?.username || user.email) + '&background=ff7a00&color=fff'}" alt="photo de profil">
+        <h2>${user.user_metadata?.username || user.user_metadata?.full_name || user.email.split('@')[0]}</h2>
+        <div class="profile-email">${user.email}</div>
+        <div class="profile-bio" id="profileBio">${user.user_metadata?.bio || 'Bienvenue sur Offranel !'}</div>
+        <div class="profile-actions">
+          <button id="editProfileBtn"><i class='fa-solid fa-pen'></i> Modifier</button>
+          <button id="logoutProfileBtn"><i class='fa-solid fa-right-from-bracket'></i> Déconnexion</button>
+        </div>
+      `;
+      // Activer la déconnexion
+      document.getElementById("logoutProfileBtn").onclick = async () => {
+        await supabase.auth.signOut();
+        showPopup('Déconnexion réussie', 'success');
+        setTimeout(() => { window.location.href = 'login.html'; }, 1200);
+      };
+      // Activer la modification du profil (bio)
+      document.getElementById("editProfileBtn").onclick = async () => {
+        const currentBio = user.user_metadata?.bio || '';
+        const newBio = prompt("Modifier votre bio :", currentBio);
+        if (newBio !== null && newBio !== currentBio) {
+          const { error } = await supabase.auth.updateUser({ data: { bio: newBio } });
+          if (error) {
+            showPopup("Erreur lors de la mise à jour : " + error.message, "error");
+          } else {
+            showPopup("Bio mise à jour !", "success");
+            checkUser();
+          }
+        }
+      };
     } else {
       window.location.href = "login.html";
     }
@@ -188,14 +432,16 @@
 
   publishForm.addEventListener("submit", async e => {
     e.preventDefault();
-    if (!currentUser) return alert("⚠️ Vous devez être connecté !");
+    if (!currentUser) return showPopup("⚠️ Vous devez être connecté !", "error");
 
     const file = document.getElementById("imageInput").files[0];
     const desc = document.getElementById("description").value.trim();
     const price = document.getElementById("price").value;
     const currency = document.getElementById("currency").value;
+    const phone = currentUser.user_metadata?.phone || "";
+    const username = currentUser.user_metadata?.username || currentUser.email;
 
-    if (!file || !desc || !price) return alert("Description, prix et image requis.");
+    if (!file || !desc || !price) return showPopup("Description, prix et image requis.", "error");
 
     publishBtn.disabled = true;
     publishBtn.textContent = "Publication en cours...";
@@ -214,17 +460,18 @@
       const { error: insertError } = await supabase
         .from('products')
         .insert([{
-          user: currentUser.user_metadata?.full_name || currentUser.email,
+          user: username,
+          phone: phone,
           description: desc,
           price: price,
           currency: currency,
           imageUrl: publicUrl,
-          timestamp: new Date().toLocaleString(),
+          created_at: new Date().toISOString(),
           isAdmin: currentUser.email === "admin@offranel.com"
         }]);
       if (insertError) throw insertError;
 
-      alert("✅ Publication réussie !");
+      showPopup("✅ Publication réussie !", "success");
       publishForm.reset();
       document.getElementById("imagePreview").innerHTML = "";
       showPage("home");
@@ -232,7 +479,7 @@
 
     } catch(err) {
       console.error(err);
-      alert("Erreur lors de la publication : " + err.message || err);
+      showPopup("Erreur lors de la publication : " + (err.message || err), "error");
     } finally {
       publishBtn.disabled = false;
       publishBtn.textContent = "Publier";
@@ -244,7 +491,7 @@
   function addToCart(p) {
     cart.push(p);
     localStorage.setItem("cart", JSON.stringify(cart));
-    alert("🛒 Produit ajouté au panier !");
+    showPopup("🛒 Produit ajouté au panier !", "success");
   }
   const cartList = document.getElementById("cartList");
   function showCart() {
@@ -262,10 +509,65 @@
 
   // --- AFFICHAGE PRODUITS ---
   const grid = document.getElementById("productsGrid");
-  async function loadProducts() {
-    const { data: products, error } = await supabase.from('products').select('*').order('timestamp', { ascending: false });
-    if (error) return console.error("Erreur lecture produits:", error);
+  const productDetailModal = document.createElement("div");
+  productDetailModal.id = "productDetailModal";
+  productDetailModal.className = "hidden";
+  document.body.appendChild(productDetailModal);
+
+  function showProductDetail(product) {
+    productDetailModal.innerHTML = `
+      <div class="modal-overlay"></div>
+      <div class="modal-content">
+        <button class="close-modal" id="closeProductModal">&times;</button>
+        <img src="${product.imageUrl || 'https://via.placeholder.com/300x180?text=Image'}" alt="${product.description || ''}" class="modal-img">
+        <h2>${product.description || ''}</h2>
+        <div class="price">${product.price} ${product.currency}</div>
+        <div class="user">Vendeur : ${product.user || 'Utilisateur'} ${product.phone ? `<span class='phone'>${product.phone}</span>` : ''}</div>
+        <div class="date">${product.created_at ? new Date(product.created_at).toLocaleString() : ''}</div>
+        <button class="publish" id="addToCartDetail">🛒 Ajouter au panier</button>
+        <button class="whatsapp" id="whatsappBtn"><i class="fa-brands fa-whatsapp"></i> Contacter sur WhatsApp</button>
+      </div>
+    `;
+    productDetailModal.classList.remove("hidden");
+    document.getElementById("closeProductModal").onclick = () => productDetailModal.classList.add("hidden");
+    document.getElementById("addToCartDetail").onclick = () => {
+      addToCart(product);
+      showPopup("Produit ajouté au panier !", "success");
+    };
+    document.getElementById("whatsappBtn").onclick = () => {
+      if (product.phone) {
+        const phone = product.phone.replace(/[^0-9+]/g, "");
+        window.open(`https://wa.me/${phone}?text=Bonjour,%20je%20suis%20intéressé%20par%20votre%20produit%20: %20${encodeURIComponent(product.description)}`);
+      } else {
+        showPopup("Numéro de téléphone du vendeur indisponible", "error");
+      }
+    };
+  }
+
+  function showLoadingSkeletons(count = 8) {
     grid.innerHTML = "";
+    for (let i = 0; i < count; i++) {
+      const skeleton = document.createElement("div");
+      skeleton.className = "card skeleton-card";
+      skeleton.innerHTML = `
+        <div class='skeleton-img'></div>
+        <div class='card-body'>
+          <div class='skeleton-line' style='width: 60%; height: 18px; margin-bottom: 8px;'></div>
+          <div class='skeleton-line' style='width: 40%; height: 16px; margin-bottom: 8px;'></div>
+          <div class='skeleton-line' style='width: 80%; height: 14px;'></div>
+        </div>
+      `;
+      grid.appendChild(skeleton);
+    }
+  }
+
+  async function loadProducts() {
+    showLoadingPopup();
+    showLoadingSkeletons();
+    const { data: products, error } = await supabase.from('products').select('*').order('created_at', { ascending: false });
+    hidePopup();
+    grid.innerHTML = "";
+    if (error) return showPopup("Erreur lecture produits: " + error.message, "error");
     if (!products || products.length === 0) {
       grid.innerHTML = "<p>Aucun produit disponible.</p>";
       return;
@@ -273,47 +575,40 @@
     products.forEach(p => {
       const card = document.createElement("div");
       card.className = "card";
-
       const img = document.createElement("img");
-      img.src = p.imageUrl || "";
+      img.src = p.imageUrl || "https://via.placeholder.com/300x180?text=Image";
       img.alt = p.description || "image";
-
+      img.loading = "lazy";
+      img.onerror = () => { img.src = "https://via.placeholder.com/300x180?text=Image"; };
+      card.appendChild(img);
+      card.onclick = () => showProductDetail(p);
       const body = document.createElement("div");
       body.className = "card-body";
-
       const userDiv = document.createElement("div");
       userDiv.className = "user";
       userDiv.innerHTML = `${p.user || 'Utilisateur'} ${p.isAdmin ? '<i class="fa-solid fa-certificate" style="color:#ff7a00"></i>' : ''}`;
-
       const priceDiv = document.createElement("div");
       priceDiv.className = "price";
       priceDiv.textContent = `${p.price} ${p.currency}`;
-
       const descP = document.createElement("p");
       descP.textContent = p.description || "";
-
       const dateDiv = document.createElement("div");
       dateDiv.className = "date";
-      dateDiv.textContent = p.timestamp || "";
-
+      dateDiv.textContent = p.created_at ? new Date(p.created_at).toLocaleString() : "";
       const actionBtn = document.createElement("button");
       actionBtn.className = "publish";
-
       if (currentUser && currentUser.email === "admin@offranel.com") {
         actionBtn.textContent = "🗑️ Supprimer";
-        actionBtn.addEventListener("click", () => deleteProduct(p.id));
+        actionBtn.addEventListener("click", (e) => { e.stopPropagation(); deleteProduct(p.id); });
       } else {
         actionBtn.textContent = "🛒 Ajouter";
-        actionBtn.addEventListener("click", () => addToCart(p));
+        actionBtn.addEventListener("click", (e) => { e.stopPropagation(); addToCart(p); showPopup("Produit ajouté au panier !", "success"); });
       }
-
       body.appendChild(userDiv);
       body.appendChild(priceDiv);
       body.appendChild(descP);
       body.appendChild(dateDiv);
       body.appendChild(actionBtn);
-
-      card.appendChild(img);
       card.appendChild(body);
       grid.appendChild(card);
     });
@@ -321,12 +616,34 @@
 
   // --- SUPPRESSION PRODUIT (ADMIN) ---
   async function deleteProduct(id) {
-    if (!currentUser || currentUser.email !== "admin@offranel.com") return alert("Accès refusé — vous devez être admin.");
+    if (!currentUser || currentUser.email !== "admin@offranel.com") return showPopup("Accès refusé — vous devez être admin.", "error");
     if (!confirm("Supprimer ce produit ?")) return;
     const { error } = await supabase.from('products').delete().eq('id', id);
-    if (error) return alert("Erreur suppression : " + error.message);
-    alert("Produit supprimé !");
+    if (error) return showPopup("Erreur suppression : " + error.message, "error");
+    showPopup("Produit supprimé !", "success");
     loadProducts();
+  }
+
+  function showPopup(message, type = "error") {
+    const popup = document.getElementById("popup");
+    popup.className = `popup ${type}`;
+    popup.innerHTML = type === "success"
+      ? `<i class='fa-solid fa-circle-check' style='color:#2ecc40'></i> ${message}`
+      : `<i class='fa-solid fa-circle-exclamation' style='color:#ff3b3b'></i> ${message}`;
+    popup.classList.remove("hidden");
+    setTimeout(() => { popup.classList.add("hidden"); }, 3500);
+  }
+
+  function showLoadingPopup(message = "Chargement en cours...") {
+    const popup = document.getElementById("popup");
+    popup.className = `popup loading`;
+    popup.innerHTML = `<i class='fa-solid fa-spinner fa-spin' style='color:#ff7a00'></i> ${message}`;
+    popup.classList.remove("hidden");
+  }
+
+  function hidePopup() {
+    const popup = document.getElementById("popup");
+    popup.classList.add("hidden");
   }
 
   loadProducts();
