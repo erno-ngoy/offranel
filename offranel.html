@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offranel 🛍️</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" href="logo.png" type="image/png">
+  <style>
+    /* (CSS identique à ton précédent) */
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #fffaf5;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    header {
+      background: linear-gradient(90deg, #ff7a00, #ff9a3d);
+      color: white;
+      padding: 10px 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    header nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    header nav button {
+      background: white;
+      color: #ff7a00;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    header nav button:hover { background: #ffe0c2; }
+    .container { padding: 20px; max-width: 1200px; margin: auto; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 15px; }
+    .card { background: white; border-radius: 15px; box-shadow: 0 3px 6px rgba(0,0,0,0.1); overflow: hidden; transition: transform 0.2s; }
+    .card:hover { transform: scale(1.02); }
+    .card img { width: 100%; height: 180px; object-fit: cover; }
+    .card-body { padding: 10px; }
+    .user { font-weight: 600; color: #ff7a00; display: flex; align-items: center; gap: 5px; font-size: 14px; }
+    .price { font-size: 18px; font-weight: bold; color: #ff7a00; }
+    .date { font-size: 12px; color: #777; }
+    form { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 3px 6px rgba(0,0,0,0.1); max-width: 450px; margin: 20px auto; display: flex; flex-direction: column; gap: 10px; }
+    input, select, textarea, button { padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px; width: 100%; }
+    button.publish { background: #ff7a00; color: white; font-weight: 600; border: none; transition: background 0.3s; cursor: pointer; }
+    button.publish:hover { background: #e66a00; }
+    .preview img { width: 100%; border-radius: 10px; margin-top: 10px; }
+    .hidden { display: none; }
+    .profile img { border-radius: 50%; width: 90px; height: 90px; object-fit: cover; }
+    ul { list-style: none; padding: 0; }
+    li { background: white; margin-bottom: 8px; padding: 10px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    @media (max-width: 600px) {
+      header { flex-direction: column; align-items: flex-start; }
+      header nav { width: 100%; justify-content: space-around; }
+      .card img { height: 150px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1><i class="fa-solid fa-store"></i> Offranel</h1>
+  <nav>
+    <button id="btnHome"><i class="fa-solid fa-house"></i></button>
+    <button id="btnPublish"><i class="fa-solid fa-plus"></i></button>
+    <button id="btnCart"><i class="fa-solid fa-cart-shopping"></i></button>
+    <button id="btnProfile"><i class="fa-solid fa-user"></i></button>
+    <button id="btnLogout" class="hidden"><i class="fa-solid fa-right-from-bracket"></i></button>
+  </nav>
+</header>
+
+<div class="container" id="homePage">
+  <h2>🛍️ Produits disponibles</h2>
+  <div class="grid" id="productsGrid"></div>
+</div>
+
+<div class="container hidden" id="publishPage">
+  <h2>📸 Publier un produit</h2>
+  <form id="publishForm">
+    <input type="text" id="description" placeholder="📝 Description du produit" required>
+    <input type="number" id="price" placeholder="💰 Prix" required>
+    <select id="currency">
+      <option value="USD">$ Dollar</option>
+      <option value="CDF">FC Franc Congolais</option>
+    </select>
+    <input type="file" id="imageInput" accept="image/*" required>
+    <div class="preview" id="imagePreview"></div>
+    <button type="submit" class="publish" id="publishBtn">Publier</button>
+  </form>
+</div>
+
+<div class="container hidden" id="cartPage">
+  <h2>🛒 Mon Panier</h2>
+  <ul id="cartList"></ul>
+</div>
+
+<div class="container hidden" id="profilePage">
+  <h2>👤 Profil</h2>
+  <div class="profile" id="userInfo"></div>
+  <h3>🏢 Offranel SARL</h3>
+  <p>Entreprise spécialisée dans la mise en relation entre acheteurs et vendeurs 🇨🇩.</p>
+</div>
+
+<script type="module">
+  import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+  // --- CONFIG SUPABASE ---
+  const supabaseUrl = "https://lpiftgpmgenhqykdwfco.supabase.co";
+  const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxwaWZ0Z3BtZ2VuaHF5a2R3ZmNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk3ODEzMjIsImV4cCI6MjA3NTM1NzMyMn0.IB92grHwhq2KGFdQVh-gcC3KjGse8oW5ugcUolgroek";
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
+  // --- NAVIGATION ---
+  const pages = {
+    home: document.getElementById("homePage"),
+    publish: document.getElementById("publishPage"),
+    cart: document.getElementById("cartPage"),
+    profile: document.getElementById("profilePage"),
+  };
+  const buttons = {
+    home: document.getElementById("btnHome"),
+    publish: document.getElementById("btnPublish"),
+    cart: document.getElementById("btnCart"),
+    profile: document.getElementById("btnProfile"),
+    logout: document.getElementById("btnLogout"),
+  };
+  function showPage(page) {
+    Object.values(pages).forEach(p => p.classList.add("hidden"));
+    pages[page].classList.remove("hidden");
+  }
+  buttons.home.onclick = () => showPage("home");
+  buttons.publish.onclick = () => showPage("publish");
+  buttons.cart.onclick = () => { showPage("cart"); showCart(); };
+  buttons.profile.onclick = () => showPage("profile");
+  buttons.logout.onclick = async () => {
+    await supabase.auth.signOut();
+    window.location.href = "login.html";
+  };
+
+  // --- UTILISATEUR COURANT ---
+  let currentUser = null;
+  async function checkUser() {
+    const { data: { user }, error } = await supabase.auth.getUser();
+    if (user) {
+      currentUser = user;
+      buttons.logout.classList.remove("hidden");
+      document.getElementById("userInfo").innerHTML = `
+        <img src="${user.user_metadata?.avatar || 'https://via.placeholder.com/90'}" alt="photo de profil">
+        <p><strong>${user.user_metadata?.full_name || user.email}</strong></p>
+        <p>${user.email}</p>`;
+    } else {
+      window.location.href = "login.html";
+    }
+  }
+  checkUser();
+
+  // --- PREVIEW IMAGE ---
+  document.getElementById("imageInput").addEventListener("change", e => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = ev => {
+        document.getElementById("imagePreview").innerHTML = `<img src="${ev.target.result}" />`;
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // --- PUBLICATION PRODUIT ---
+  const publishForm = document.getElementById("publishForm");
+  const publishBtn = document.getElementById("publishBtn");
+
+  publishForm.addEventListener("submit", async e => {
+    e.preventDefault();
+    if (!currentUser) return alert("⚠️ Vous devez être connecté !");
+
+    const file = document.getElementById("imageInput").files[0];
+    const desc = document.getElementById("description").value.trim();
+    const price = document.getElementById("price").value;
+    const currency = document.getElementById("currency").value;
+
+    if (!file || !desc || !price) return alert("Description, prix et image requis.");
+
+    publishBtn.disabled = true;
+    publishBtn.textContent = "Publication en cours...";
+
+    try {
+      // --- Upload image dans Supabase Storage ---
+      const fileName = Date.now() + "_" + file.name;
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('products')
+        .upload(fileName, file);
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage.from('products').getPublicUrl(fileName);
+
+      // --- Insert produit dans Supabase DB ---
+      const { error: insertError } = await supabase
+        .from('products')
+        .insert([{
+          user: currentUser.user_metadata?.full_name || currentUser.email,
+          description: desc,
+          price: price,
+          currency: currency,
+          imageUrl: publicUrl,
+          timestamp: new Date().toLocaleString(),
+          isAdmin: currentUser.email === "admin@offranel.com"
+        }]);
+      if (insertError) throw insertError;
+
+      alert("✅ Publication réussie !");
+      publishForm.reset();
+      document.getElementById("imagePreview").innerHTML = "";
+      showPage("home");
+      loadProducts();
+
+    } catch(err) {
+      console.error(err);
+      alert("Erreur lors de la publication : " + err.message || err);
+    } finally {
+      publishBtn.disabled = false;
+      publishBtn.textContent = "Publier";
+    }
+  });
+
+  // --- PANIER LOCAL ---
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  function addToCart(p) {
+    cart.push(p);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    alert("🛒 Produit ajouté au panier !");
+  }
+  const cartList = document.getElementById("cartList");
+  function showCart() {
+    cartList.innerHTML = "";
+    if (cart.length === 0) {
+      cartList.innerHTML = "<p>Aucun produit dans le panier.</p>";
+      return;
+    }
+    cart.forEach(item => {
+      const li = document.createElement("li");
+      li.innerHTML = `${item.description} - <strong>${item.price} ${item.currency}</strong>`;
+      cartList.appendChild(li);
+    });
+  }
+
+  // --- AFFICHAGE PRODUITS ---
+  const grid = document.getElementById("productsGrid");
+  async function loadProducts() {
+    const { data: products, error } = await supabase.from('products').select('*').order('timestamp', { ascending: false });
+    if (error) return console.error("Erreur lecture produits:", error);
+    grid.innerHTML = "";
+    if (!products || products.length === 0) {
+      grid.innerHTML = "<p>Aucun produit disponible.</p>";
+      return;
+    }
+    products.forEach(p => {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const img = document.createElement("img");
+      img.src = p.imageUrl || "";
+      img.alt = p.description || "image";
+
+      const body = document.createElement("div");
+      body.className = "card-body";
+
+      const userDiv = document.createElement("div");
+      userDiv.className = "user";
+      userDiv.innerHTML = `${p.user || 'Utilisateur'} ${p.isAdmin ? '<i class="fa-solid fa-certificate" style="color:#ff7a00"></i>' : ''}`;
+
+      const priceDiv = document.createElement("div");
+      priceDiv.className = "price";
+      priceDiv.textContent = `${p.price} ${p.currency}`;
+
+      const descP = document.createElement("p");
+      descP.textContent = p.description || "";
+
+      const dateDiv = document.createElement("div");
+      dateDiv.className = "date";
+      dateDiv.textContent = p.timestamp || "";
+
+      const actionBtn = document.createElement("button");
+      actionBtn.className = "publish";
+
+      if (currentUser && currentUser.email === "admin@offranel.com") {
+        actionBtn.textContent = "🗑️ Supprimer";
+        actionBtn.addEventListener("click", () => deleteProduct(p.id));
+      } else {
+        actionBtn.textContent = "🛒 Ajouter";
+        actionBtn.addEventListener("click", () => addToCart(p));
+      }
+
+      body.appendChild(userDiv);
+      body.appendChild(priceDiv);
+      body.appendChild(descP);
+      body.appendChild(dateDiv);
+      body.appendChild(actionBtn);
+
+      card.appendChild(img);
+      card.appendChild(body);
+      grid.appendChild(card);
+    });
+  }
+
+  // --- SUPPRESSION PRODUIT (ADMIN) ---
+  async function deleteProduct(id) {
+    if (!currentUser || currentUser.email !== "admin@offranel.com") return alert("Accès refusé — vous devez être admin.");
+    if (!confirm("Supprimer ce produit ?")) return;
+    const { error } = await supabase.from('products').delete().eq('id', id);
+    if (error) return alert("Erreur suppression : " + error.message);
+    alert("Produit supprimé !");
+    loadProducts();
+  }
+
+  loadProducts();
+</script>
+
+</body>
+</html>
